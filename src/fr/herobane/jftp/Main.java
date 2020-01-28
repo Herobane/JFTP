@@ -22,7 +22,7 @@ public class Main extends Application {
 
 		FXMLLoader loader = new FXMLLoader();
 		
-		loader.setLocation(View.class.getResource("frame.fxml"));
+		loader.setLocation(View.class.getResource("MainFrame.fxml"));
 		Controller c = new Controller();
 		loader.setController(c);
 		

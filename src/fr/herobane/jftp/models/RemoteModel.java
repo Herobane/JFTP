@@ -12,12 +12,54 @@ import java.util.StringTokenizer;
 public class RemoteModel
 {
 
+	/* 
+	 * IP address of the Remote host
+	 * 
+	 */
 	private String remoteAddress;
+	
+	
+	
+	/*
+	 * 
+	 * Port used for the FTP connection
+	 * 
+	 * primaryPort for the command channel
+	 * 	--> Used to send commands and read commands responses
+	 * 
+	 * dataPort for the data channel
+	 * 	--> Used to get response from commands like LIST, RETR etc...
+	 * 
+	 */
 	private int primaryPort, dataPort;
+	
+	
+	
+	/*
+	 * 
+	 * Matching Sockets for command channel and data channel
+	 * 	--> both Sockets connects to same IP address
+	 */
 	private Socket primarySocket, dataSocket;
+	
+	
+	/*
+	 * Matching I/O Streams to communicate with command and data channels
+	 */
 	private BufferedWriter primaryWriter, dataWriter;
 	private BufferedReader primaryReader, dataReader;
 	
+	
+	
+	/*
+	 * 
+	 * Main Constructor
+	 * 
+	 * Take 2 parameters which are :
+	 * 	-	String ipAddress represent the IP address of the remoteHost
+	 * 	-	int port represent the default port (port for command channel)
+	 * 
+	 */
 	public RemoteModel(String ipAddress, int port)
 	{
 
@@ -47,7 +89,11 @@ public class RemoteModel
 		
 	}
 	
-	// Enter passive mode and return a Socket with the matching IP address and port
+	
+	
+	/* 
+	 * Enter passive mode and return a Socket with the matching IP address and port
+	 */
 	public Socket pasv() throws IOException
 	{
 		
@@ -93,9 +139,18 @@ public class RemoteModel
 		return this.dataSocket;
 	}
 	
-	// Send raw command to the remote host
-	// Return a String containing the command sent
-	// Can throw an IOException
+	
+	
+	/*
+	 * Send raw command to the remote host
+	 * 
+	 * Take a String parameter which represent the command
+	 * 
+	 * Return a String containing the command sent
+	 * 
+	 * Can throw an IOException
+	 * 
+	 */
 	public String sendCommand(String msg)
 	{	
 		
@@ -117,6 +172,17 @@ public class RemoteModel
 
 	}
 	
+	
+	
+	/*
+	 * Send raw command to the remote host
+	 * 
+	 * Take 2 parameters which are :
+	 * 	-	String
+	 * 
+	 * Can throw an IOException
+	 * 
+	 */
 	public String sendCommand(BufferedWriter outputStream, String msg)
 	{	
 		
@@ -217,6 +283,16 @@ public class RemoteModel
 		}
 		
 
+	}
+	
+	public String changeWorkingDirectory(String directory)
+	{
+		this.sendCommand("CWD " + directory + "\r\n");
+		System.out.println(this.getResponse());
+		
+		this.sendCommand("LIST\r\n");
+		
+		return this.getResponse(dataReader);
 	}
 	
 	public String getRemoteAddress()
